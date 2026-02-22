@@ -3,8 +3,9 @@
 1) Создать свой RPM пакет (можно взять свое приложение, либо собрать, например,
 Apache с определенными опциями).  
 2) Создать свой репозиторий и разместить там ранее собранный RPM.  
-  
-## Выполнение:  
+
+## Выполнение: 
+Для интереса я решила взять Ubuntu и DEB пакеты, надеюсь это не критично.
 # Задание 1.  
 Обновим систему и установим необходимые пакеты:  
 ```
@@ -160,9 +161,10 @@ nginx -V
 nginx version: nginx/1.24.0 (Ubuntu)
 built with OpenSSL 3.0.13 30 Jan 2024
 TLS SNI support enabled
-configure arguments: --with-cc-opt='-g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/root/deb/nginx-1.24.0=. -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/root/deb/nginx-1.24.0=/usr/src/nginx-1.24.0-2ubuntu7.7 -fPIC -Wdate-time -D_FORTIFY_SOURCE=3' --with-ld-opt='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl,-z,relro -Wl,-z,now -fPIC' --prefix=/usr/share/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=stderr --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --modules-path=/usr/lib/nginx/modules --http-client-body-temp-path=/var/lib/nginx/body --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --http-proxy-temp-path=/var/lib/nginx/proxy --http-scgi-temp-path=/var/lib/nginx/scgi --http-uwsgi-temp-path=/var/lib/nginx/uwsgi --with-compat --add-module=/root/deb/ngx_brotli --with-debug --with-pcre-jit --with-http_ssl_module --with-http_stub_status_module --with-http_realip_module --with-http_auth_request_module --with-http_v2_module --with-http_dav_module --with-http_slice_module --with-threads --with-http_addition_module --with-http_flv_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_mp4_module --with-http_random_index_module --with-http_secure_link_module --with-http_sub_module --with-mail_ssl_module --with-stream_ssl_module --with-stream_ssl_preread_module --with-stream_realip_module --with-http_geoip_module=dynamic --with-http_image_filter_module=dynamic --with-http_perl_module=dynamic --with-http_xslt_module=dynamic --with-mail=dynamic --with-stream=dynamic --with-stream_geoip_module=dynamic
+configure arguments: --with-cc-opt='-g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/root/deb/nginx-1.24.0=. -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/root/deb/nginx-1.24.0=/usr/src/nginx-1.24.0-2ubuntu7.7 -fPIC -Wdate-time -D_FORTIFY_SOURCE=3' --with-ld-opt='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl,-z,relro -Wl,-z,now -fPIC' --prefix=/usr/share/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=stderr --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --modules-path=/usr/lib/nginx/modules --http-client-body-temp-path=/var/lib/nginx/body --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --http-proxy-temp-path=/var/lib/nginx/proxy --http-scgi-temp-path=/var/lib/nginx/scgi --http-uwsgi-temp-path=/var/lib/nginx/uwsgi --with-compat **--add-module=/root/deb/ngx_brotli** --with-debug --with-pcre-jit --with-http_ssl_module --with-http_stub_status_module --with-http_realip_module --with-http_auth_request_module --with-http_v2_module --with-http_dav_module --with-http_slice_module --with-threads --with-http_addition_module --with-http_flv_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_mp4_module --with-http_random_index_module --with-http_secure_link_module --with-http_sub_module --with-mail_ssl_module --with-stream_ssl_module --with-stream_ssl_preread_module --with-stream_realip_module --with-http_geoip_module=dynamic --with-http_image_filter_module=dynamic --with-http_perl_module=dynamic --with-http_xslt_module=dynamic --with-mail=dynamic --with-stream=dynamic --with-stream_geoip_module=dynamic
 ```
 
+# Задание 2
 Создадим корневую директорию репозитория, скопируем туда deb файлы и соберем Package.gz со списком доступных пакетов:  
 ```
 mkdir /usr/share/nginx/html/repo
@@ -208,7 +210,7 @@ drwxr-xr-x 3 root root   4096 Feb 22 20:45 ..
 -rw-r--r-- 1 root root  17258 Feb 22 20:45 nginx-extras_1.24.0-2ubuntu7.7_amd64.deb
 -rw-r--r-- 1 root root  17082 Feb 22 20:45 nginx-full_1.24.0-2ubuntu7.7_all.deb
 -rw-r--r-- 1 root root  16796 Feb 22 20:45 nginx-light_1.24.0-2ubuntu7.7_all.deb
--rw-r--r-- 1 root root   4588 Feb 22 20:50 Packages.gz
+**-rw-r--r-- 1 root root   4588 Feb 22 20:50 Packages.gz**
 ```
 
 Изменим конфиг nginx - поменяем корневую папку и добавим autoindex on:    
@@ -255,7 +257,7 @@ nginx:
   Candidate: 1.24.0-2ubuntu7.7
   Version table:
  *** 1.24.0-2ubuntu7.7 500
-        500 http://10.99.217.6/repo ./ Packages
+        500 **http://10.99.217.6/repo ./ Packages**
         100 /var/lib/dpkg/status
      1.24.0-2ubuntu7.6 500
         500 http://ru.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages
